@@ -1,0 +1,92 @@
+<div class="home-wrap">
+  <div class="importData">
+    <input type="file" [(ngModel)]="importedFileName" (change)="onSelected($event)">
+    <button (click)="copyParsed()" [disabled]="!importedFileContent">Copy</button>
+    <button (click)="clear()">Clear</button>
+    <label *ngIf="copied">Copied to clipboard!</label>
+  </div>
+  <div class="content-wrap">
+    <div class="content">
+      <div class="sidebar">
+        <div class="sidebar-item">
+          <p class="heading">Medicine:</p>
+          <div class="items">
+            <input type="text" [(ngModel)]="filteredMedsInput" (keyup)="filterMeds()">
+            <div class="item" *ngFor="let item of filteredMeds" (click)="selectRecipe(item)"
+                 [ngClass]="{
+                    'simple': item.isSimple,
+                    'selected': item.id === selectedReaction?.id
+                 }"
+            >
+              <div class="info">
+                <p>{{item.name}}</p>
+                <p>{{item.isSimple ? 'Simple' : ''}}</p>
+              </div>
+              <div class="actions">
+                <p>{{'>'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <p class="heading">Chemicals:</p>
+          <div class="items">
+            <input type="text" [(ngModel)]="filteredChemsInput" (keyup)="filterChems()">
+            <div class="item" *ngFor="let item of filteredChems" (click)="selectRecipe(item)"
+                 [ngClass]="{
+                    'simple': item.isSimple,
+                    'selected': item.id === selectedReaction?.id
+                 }"
+            >
+              <div class="info">
+                <p>{{item.name}}</p>
+                <p>{{item.isSimple ? 'Simple' : ''}}</p>
+              </div>
+              <div class="actions">
+                <p>{{'>'}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reactions">
+        <div class="item" *ngFor="let treeItem of selectedTree"
+             [ngClass]="{
+                'simple': treeItem.isSimple
+             }"
+        >
+          <div class="name">
+            <p>{{treeItem.name}} {{treeItem.products ? treeItem.products[treeItem.id] : ''}}</p>
+          </div>
+          <div class="recipe">
+            <div class="recipe-item" *ngFor="let recipeItem of Object.keys(treeItem.reactants)"
+                 [ngClass]="{
+                    'sub': !treeItem.reactants[recipeItem].isSimple
+                 }"
+            >
+              <p>
+                {{recipeItem}}: {{treeItem.reactants[recipeItem].amount}}
+                {{(!treeItem.reactants[recipeItem].isSimple && !treeItem.reactants[recipeItem].isRecipe) ?
+                  '[no recipe]' :
+                  ''
+                }}
+                {{(treeItem.reactants[recipeItem].catalyst) ? '[catalyst]' : ''}}
+              </p>
+            </div>
+          </div>
+          <div class="description">
+            <p *ngIf="!treeItem.effects && !treeItem.minTemp">
+              Not implemented yet
+            </p>
+            <p *ngIf="treeItem.effects">
+              {{treeItem.effects.type}}
+            </p>
+            <p *ngIf="treeItem.minTemp">
+              Min temp: {{treeItem.minTemp}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
