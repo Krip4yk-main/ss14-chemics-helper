@@ -35,6 +35,36 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.meds = this.meds.sort((a: IReaction, b: IReaction) => {
+      if (a.prioritised && b.prioritised) {
+        if ( a.id < b.id ){
+          return -1;
+        }
+        if ( a.id > b.id ){
+          return 1;
+        }
+      }
+      if (a.prioritised) return -1;
+      if (b.prioritised) return 1;
+      if ( a.id < b.id ){
+        return -1;
+      }
+      if ( a.id > b.id ){
+        return 1;
+      }
+      return 0;
+    })
+    this.chems = this.chems.sort((a: IReaction, b: IReaction) => {
+      if (a.prioritised) return -1;
+      if (b.prioritised) return 1;
+      if ( a.id < b.id ){
+        return -1;
+      }
+      if ( a.id > b.id ){
+        return 1;
+      }
+      return 0;
+    })
     this.meds.forEach((item: IReaction) => {
       item.isSimple = true;
       for (const react of Object.keys(item.reactants)) {
