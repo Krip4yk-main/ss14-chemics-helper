@@ -55,6 +55,14 @@ export class HomeComponent implements OnInit {
       return 0;
     })
     this.chems = this.chems.sort((a: IReaction, b: IReaction) => {
+      if (a.prioritised && b.prioritised) {
+        if ( a.id < b.id ){
+          return -1;
+        }
+        if ( a.id > b.id ){
+          return 1;
+        }
+      }
       if (a.prioritised) return -1;
       if (b.prioritised) return 1;
       if ( a.id < b.id ){
