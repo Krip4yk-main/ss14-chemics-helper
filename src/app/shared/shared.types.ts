@@ -5,6 +5,8 @@ export interface IReaction {
   priority?: number;
   minTemp?: number;
   // next-only additional field
+  prioritised?: boolean;
+  // next-only additional field
   name?: string;
   // next-only additional field
   isSimple?: boolean;

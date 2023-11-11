@@ -4,6 +4,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Dylovene',
+    prioritised: true,
     reactants:
       {
         Silicon:
@@ -92,6 +93,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Bicaridine',
+    prioritised: true,
     reactants:
       {
         Inaprovaline:
@@ -153,6 +155,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Epinephrine',
+    prioritised: true,
     reactants:
       {
         Phenol:
@@ -184,6 +187,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Dermaline',
+    prioritised: true,
     reactants:
       {
         Kelotane:
@@ -227,6 +231,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'DexalinPlus',
+    prioritised: true,
     reactants:
       {
         Dexalin:
@@ -381,6 +386,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Phalanximine',
+    prioritised: true,
     reactants:
       {
         Hyronalin:
@@ -669,6 +675,7 @@ export const meds: IReaction[] = [
   {
     type: 'reaction',
     id: 'Siderlac',
+    prioritised: true,
     reactants:
       {
         Aloe:

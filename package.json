@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
-  "version": "13.0.0",
-  "description": "Angular 16 with Electron 25 (Typescript + SASS + Hot Reload)",
+  "name": "ss14-chem-helper",
+  "version": "1.0.1",
+  "description": "",
   "homepage": "https://github.com/maximegris/angular-electron",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Krip4yk",
+    "email": "krip4yk.main@gmail.com"
   },
   "keywords": [
     "angular",
