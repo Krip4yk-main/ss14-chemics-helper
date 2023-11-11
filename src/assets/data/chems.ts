@@ -550,6 +550,7 @@ export const chems: IReaction[] = [
     type: 'reaction',
     id: 'ChloralHydrate',
     impact: 'Medium',
+    prioritised: true,
     reactants:
       {
         Chlorine:
@@ -735,6 +736,7 @@ export const chems: IReaction[] = [
   {
     type: 'reaction',
     id: 'SpaceCleaner',
+    prioritised: true,
     reactants:
       {
         Ammonia:
