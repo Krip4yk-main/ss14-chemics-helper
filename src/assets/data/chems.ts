@@ -1,6 +1,6 @@
 import {IReaction} from "../../app/shared/shared.types";
 
-export const chems: IReaction[] = [
+export default [
   {
     type: 'reaction',
     id: 'Ammonia',
@@ -777,4 +777,4 @@ export const chems: IReaction[] = [
         SpaceLube: 5,
       },
   },
-]
+] as IReaction[];

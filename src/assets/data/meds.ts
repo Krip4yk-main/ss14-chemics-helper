@@ -1,6 +1,6 @@
 import {IReaction} from "../../app/shared/shared.types";
 
-export const meds: IReaction[] = [
+export default [
   {
     type: 'reaction',
     id: 'Dylovene',
@@ -763,4 +763,4 @@ export const meds: IReaction[] = [
         Saline: 5,
       },
   },
-]
+] as IReaction[];

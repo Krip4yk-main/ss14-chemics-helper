@@ -41,12 +41,21 @@
             margin-bottom: 1rem;
           }
 
-          .heading {
-            font-size: 16px;
-            line-height: 18px;
-            font-weight: bold;
+          .heading-wrap {
             padding-bottom: 0.5rem;
             border-bottom: 1px lightslategray solid;
+            display: flex;
+
+            .heading {
+              font-size: 16px;
+              line-height: 18px;
+              font-weight: bold;
+
+              &.arrows {
+                margin: 0 0.5rem;
+                cursor: pointer;
+              }
+            }
           }
 
           .items {

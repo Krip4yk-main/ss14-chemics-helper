@@ -9,10 +9,14 @@
     <div class="content">
       <div class="sidebar">
         <div class="sidebar-item">
-          <p class="heading">Medicine:</p>
+          <div class="heading-wrap">
+            <p class="heading arrows">{{'<<'}}</p>
+            <p class="heading">Medicine:</p>
+            <p class="heading arrows">{{'>>'}}</p>
+          </div>
           <div class="items">
-            <input type="text" [(ngModel)]="filteredMedsInput" (keyup)="filterMeds()">
-            <div class="item" *ngFor="let item of filteredMeds" (click)="selectRecipe(item)"
+            <input type="text" [(ngModel)]="reactionsGroups['meds'].search" (keyup)="uniFilter('meds')">
+            <div class="item" *ngFor="let item of reactionsGroups['meds'].filteredReactions" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
                     'selected': item.id === selectedReaction?.id
@@ -29,10 +33,14 @@
           </div>
         </div>
         <div class="sidebar-item">
-          <p class="heading">Chemicals:</p>
+          <div class="heading-wrap">
+            <p class="heading arrows">{{'<<'}}</p>
+            <p class="heading">Chemicals:</p>
+            <p class="heading arrows">{{'>>'}}</p>
+          </div>
           <div class="items">
-            <input type="text" [(ngModel)]="filteredChemsInput" (keyup)="filterChems()">
-            <div class="item" *ngFor="let item of filteredChems" (click)="selectRecipe(item)"
+            <input type="text" [(ngModel)]="reactionsGroups['chems'].search" (keyup)="uniFilter('chems')">
+            <div class="item" *ngFor="let item of reactionsGroups['chems'].filteredReactions" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
                     'selected': item.id === selectedReaction?.id

@@ -1,3 +1,19 @@
+export interface IReactionGroups {
+  [group: string]: IReactionGroup;
+}
+
+export interface IReactionGroup {
+  reactions: IReaction[];
+  filteredReactions: IReaction[];
+  search: string;
+}
+
+export const emptyReactionGroup: IReactionGroup = {
+  reactions: [],
+  filteredReactions: [],
+  search: '',
+}
+
 export interface IReaction {
   type: string;
   id: string;
