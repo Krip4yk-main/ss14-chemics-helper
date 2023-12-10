@@ -1,3 +1,9 @@
 :host {
   font: normal normal 14px/16px Segoe UI;
 }
+
+.dotted-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

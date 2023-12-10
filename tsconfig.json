@@ -19,7 +19,8 @@
       "es2016",
       "es2015",
       "es2018",
-      "dom"
+      "dom",
+      "ES2021.String"
     ],
     "useDefineForClassFields": false
   },

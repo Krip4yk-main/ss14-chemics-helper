@@ -1,20 +1,18 @@
 <div class="home-wrap">
-  <div class="importData">
-    <input type="file" [(ngModel)]="importedFileName" (change)="onSelected($event)">
-    <button (click)="copyParsed()" [disabled]="!importedFileContent">Copy</button>
-    <button (click)="clear()">Clear</button>
-    <label *ngIf="copied">Copied to clipboard!</label>
-  </div>
   <div class="content-wrap">
     <div class="content">
       <div class="sidebar">
         <div class="sidebar-item">
           <div class="heading-wrap">
-            <p class="heading arrows">{{'<<'}}</p>
-            <p class="heading">Medicine:</p>
-            <p class="heading arrows">{{'>>'}}</p>
+            <div class="heading dropdown">
+              <app-dropdown
+                [data]="storage.wizardsData.reactions"
+                dataLabel="label"
+                (onChange)="ddChange($event)"
+              ></app-dropdown>
+            </div>
           </div>
-          <div class="items">
+          <!--<div class="items">
             <input type="text" [(ngModel)]="reactionsGroups['meds'].search" (keyup)="uniFilter('meds')">
             <div class="item" *ngFor="let item of reactionsGroups['meds'].filteredReactions" (click)="selectRecipe(item)"
                  [ngClass]="{
@@ -30,7 +28,7 @@
                 <p>{{'>'}}</p>
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
         <div class="sidebar-item">
           <div class="heading-wrap">
@@ -38,7 +36,7 @@
             <p class="heading">Chemicals:</p>
             <p class="heading arrows">{{'>>'}}</p>
           </div>
-          <div class="items">
+          <!--<div class="items">
             <input type="text" [(ngModel)]="reactionsGroups['chems'].search" (keyup)="uniFilter('chems')">
             <div class="item" *ngFor="let item of reactionsGroups['chems'].filteredReactions" (click)="selectRecipe(item)"
                  [ngClass]="{
@@ -54,7 +52,7 @@
                 <p>{{'>'}}</p>
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
       <div class="reactions">
@@ -66,7 +64,7 @@
           <div class="name">
             <p>{{treeItem.name}} {{treeItem.products ? treeItem.products[treeItem.id] : ''}}</p>
           </div>
-          <div class="recipe">
+          <!--<div class="recipe">
             <div class="recipe-item" *ngFor="let recipeItem of Object.keys(treeItem.reactants)"
                  [ngClass]="{
                     'sub': !treeItem.reactants[recipeItem].isSimple
@@ -81,13 +79,13 @@
                 {{(treeItem.reactants[recipeItem].catalyst) ? '[catalyst]' : ''}}
               </p>
             </div>
-          </div>
+          </div>-->
           <div class="description">
             <p *ngIf="!treeItem.effects && !treeItem.minTemp">
               Not implemented yet
             </p>
             <p *ngIf="treeItem.effects">
-              {{treeItem.effects.type}}
+<!--              {{treeItem.effects.type}}-->
             </p>
             <p *ngIf="treeItem.minTemp">
               Min temp: {{treeItem.minTemp}}
