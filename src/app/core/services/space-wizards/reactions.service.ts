@@ -42,6 +42,9 @@ export class ReactionsService {
           const content: IReaction[] = yaml.load(parsedData) as IReaction[];
           this.storage.wizardsData.reactions.push({
             label: react,
+            name: react[0].toUpperCase() + react.substring(1),
+            filter: '',
+            looked: false,
             content: content,
           });
         })

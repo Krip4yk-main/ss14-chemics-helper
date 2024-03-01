@@ -13,6 +13,9 @@ export class CoreEmpty {
     },
     available: {
       label: '',
+      name: '',
+      filter: '',
+      looked: false,
       content: [],
     }
   };

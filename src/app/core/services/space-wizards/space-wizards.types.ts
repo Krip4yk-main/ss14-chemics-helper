@@ -1,12 +1,14 @@
 export interface IAvailable {
   label: string;
+  name: string;
+  filter: string;
+  looked: boolean;
   content: IReaction[];
 }
 
 export interface IReaction {
   id: string;
   products: IProduct;
-  reactants: IReactant;
   type: string;
 
   // optional fields
@@ -14,6 +16,8 @@ export interface IReaction {
   impact?: string;
   priority?: number;
   minTemp?: number;
+  solids?: number;
+  reactants?: IReactant;
 
   // additional fields
   prioritised?: boolean;
@@ -32,6 +36,6 @@ export interface IReactant {
 
     // additional fields
     isSimple?: boolean;
-    isRecipe?: boolean;
+    hasRecipe?: boolean;
   },
 }
