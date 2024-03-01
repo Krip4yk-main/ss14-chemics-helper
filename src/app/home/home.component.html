@@ -1,25 +1,27 @@
 <div class="home-wrap">
-  <div class="importData">
-    <input type="file" [(ngModel)]="importedFileName" (change)="onSelected($event)">
-    <button (click)="copyParsed()" [disabled]="!importedFileContent">Copy</button>
-    <button (click)="clear()">Clear</button>
-    <label *ngIf="copied">Copied to clipboard!</label>
-  </div>
   <div class="content-wrap">
     <div class="content">
       <div class="sidebar">
         <div class="sidebar-item">
-          <p class="heading">Medicine:</p>
+          <div class="heading-wrap">
+            <div class="heading dropdown">
+              <app-dropdown
+                [data]="storage.wizardsData.reactions"
+                dataLabel="name"
+                (onChange)="ddChange($event, 0)"
+              ></app-dropdown>
+            </div>
+          </div>
           <div class="items">
-            <input type="text" [(ngModel)]="filteredMedsInput" (keyup)="filterMeds()">
-            <div class="item" *ngFor="let item of filteredMeds" (click)="selectRecipe(item)"
+            <input type="text" [(ngModel)]="selectedReactionCategory[0].filter" (keyup)="filter(0)">
+            <div class="item" *ngFor="let item of filteredCategory[0].content" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
-                    'selected': item.id === selectedReaction?.id
+                    'selected': item.id == selectedReaction?.id
                  }"
             >
               <div class="info">
-                <p>{{item.name}}</p>
+                <p>{{item.id}}</p>
                 <p>{{item.isSimple ? 'Simple' : ''}}</p>
               </div>
               <div class="actions">
@@ -29,17 +31,25 @@
           </div>
         </div>
         <div class="sidebar-item">
-          <p class="heading">Chemicals:</p>
+          <div class="heading-wrap">
+            <div class="heading dropdown">
+              <app-dropdown
+                [data]="storage.wizardsData.reactions"
+                dataLabel="name"
+                (onChange)="ddChange($event, 1)"
+              ></app-dropdown>
+            </div>
+          </div>
           <div class="items">
-            <input type="text" [(ngModel)]="filteredChemsInput" (keyup)="filterChems()">
-            <div class="item" *ngFor="let item of filteredChems" (click)="selectRecipe(item)"
+            <input type="text" [(ngModel)]="selectedReactionCategory[1].filter" (keyup)="filter(1)">
+            <div class="item" *ngFor="let item of filteredCategory[1].content" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
-                    'selected': item.id === selectedReaction?.id
+                    'selected': item.id == selectedReaction?.id
                  }"
             >
               <div class="info">
-                <p>{{item.name}}</p>
+                <p>{{item.id}}</p>
                 <p>{{item.isSimple ? 'Simple' : ''}}</p>
               </div>
               <div class="actions">
@@ -56,21 +66,24 @@
              }"
         >
           <div class="name">
-            <p>{{treeItem.name}} {{treeItem.products ? treeItem.products[treeItem.id] : ''}}</p>
+            <p>{{treeItem.id}} {{treeItem.products ? treeItem.products[treeItem.id] : ''}}</p>
           </div>
-          <div class="recipe">
+          <div class="recipe" *ngIf="treeItem.reactants">
             <div class="recipe-item" *ngFor="let recipeItem of Object.keys(treeItem.reactants)"
                  [ngClass]="{
-                    'sub': !treeItem.reactants[recipeItem].isSimple
+                    'sub': treeItem.reactants ? !treeItem.reactants[recipeItem].isSimple : false
                  }"
             >
-              <p>
-                {{recipeItem}}: {{treeItem.reactants[recipeItem].amount}}
-                {{(!treeItem.reactants[recipeItem].isSimple && !treeItem.reactants[recipeItem].isRecipe) ?
-                  '[no recipe]' :
-                  ''
-                }}
-                {{(treeItem.reactants[recipeItem].catalyst) ? '[catalyst]' : ''}}
+              <p>{{recipeItem}}: {{treeItem.reactants ? treeItem.reactants[recipeItem].amount : ''}}</p>
+              <p
+                *ngIf="(treeItem.reactants && !treeItem.reactants[recipeItem].isSimple &&
+                 !treeItem.reactants[recipeItem].hasRecipe)">
+                [no recipe]
+              </p>
+              <p *ngIf="(treeItem.reactants && treeItem.reactants[recipeItem].catalyst)"
+                 pTooltip="Reactant will not be used"
+              >
+                [catalyst]
               </p>
             </div>
           </div>
@@ -79,12 +92,24 @@
               Not implemented yet
             </p>
             <p *ngIf="treeItem.effects">
-              {{treeItem.effects.type}}
+              <!--              {{treeItem.effects.type}}-->
             </p>
             <p *ngIf="treeItem.minTemp">
               Min temp: {{treeItem.minTemp}}
             </p>
+            <button class="showMeItem"
+                    (click)="showMeItem(treeItem)"
+            >Show me this item
+            </button>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="showMeContentWrap">
+      <div class="showMeContent" *ngIf="showMe">
+        <div class="item" *ngFor="let item of Object.keys(showMe)">
+          <p class="property">{{item}}</p>
+          <p class="value">{{JSON.stringify(showMe[item])}}</p>
         </div>
       </div>
     </div>

@@ -1,0 +1,21 @@
+<div class="dropdown-wrapper">
+  <div class="selected-field" (click)="expToggle()">
+    <div class="placeholder dotted-text" *ngIf="!selectedItem">
+      {{placeholder}}
+    </div>
+    <div class="content dotted-text" *ngIf="selectedItem">
+      {{dataLabel ? selectedItem[dataLabel] : selectedItem}}
+    </div>
+    <div class="arrow">
+    </div>
+  </div>
+  <div class="dropdown" *ngIf="isExpanded">
+    <div class="items-wrapper">
+      <div class="items">
+        <div class="item" *ngFor="let item of data" (click)="select(item)">
+          {{dataLabel ? item[dataLabel] : item}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

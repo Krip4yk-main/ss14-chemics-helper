@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {COPY, parser} from "../app.helper";
-import {meds} from "../../assets/data/meds";
-import {chems} from "../../assets/data/chems";
-import {IReaction} from "../shared/shared.types";
-import {basicReagents} from "../../assets/data/basicReagents";
+import {CoreStorage} from "../core/core.storage";
+import {IAvailable, IReaction} from "../core/services/space-wizards/space-wizards.types";
+import {CoreEmpty} from "../core/core.empty";
+import {COPY} from "../app.helper";
 
 @Component({
   selector: 'app-home',
@@ -13,185 +11,108 @@ import {basicReagents} from "../../assets/data/basicReagents";
 })
 export class HomeComponent implements OnInit {
 
-  importedFileName: string = '';
-  importedFileContent: string = '';
-  fileLoaded: boolean = false;
-  copied: boolean = false;
-
-  meds: IReaction[] = COPY(meds);
-  filteredMeds: IReaction[] = [];
-  filteredMedsInput: string = '';
-  chems: IReaction[] = COPY(chems);
-  filteredChems: IReaction[] = [];
-  filteredChemsInput: string = '';
-  basicReagents: string[] = COPY(basicReagents);
-
-  selectedReaction: IReaction | undefined;
+  selectedReactionCategory: IAvailable[] = [this.empty.getEmpty("available"), this.empty.getEmpty("available")];
+  filteredCategory: IAvailable[] = [this.empty.getEmpty("available"), this.empty.getEmpty("available")];
+  selectedReaction: IReaction | undefined = undefined;
   selectedTree: IReaction[] = [];
+  showMe: any;
 
   constructor(
-    private router: Router,
+    public storage: CoreStorage,
+    public empty: CoreEmpty,
   ) {
   }
 
   ngOnInit(): void {
-    this.meds = this.meds.sort((a: IReaction, b: IReaction) => {
-      if (a.prioritised && b.prioritised) {
-        if ( a.id < b.id ){
-          return -1;
-        }
-        if ( a.id > b.id ){
-          return 1;
-        }
-      }
-      if (a.prioritised) return -1;
-      if (b.prioritised) return 1;
-      if ( a.id < b.id ){
-        return -1;
-      }
-      if ( a.id > b.id ){
-        return 1;
-      }
-      return 0;
-    })
-    this.chems = this.chems.sort((a: IReaction, b: IReaction) => {
-      if (a.prioritised) return -1;
-      if (b.prioritised) return 1;
-      if ( a.id < b.id ){
-        return -1;
-      }
-      if ( a.id > b.id ){
-        return 1;
-      }
-      return 0;
-    })
-    this.meds.forEach((item: IReaction) => {
-      item.isSimple = true;
-      for (const react of Object.keys(item.reactants)) {
-        if (!this.basicReagents.includes(react.toLowerCase())) {
-          item.isSimple = false;
-          break;
-        }
-      }
-      const subId: string = item.id.substring(1);
-      if (subId !== subId.toLowerCase()) {
-        let tempId: string = '';
-        for (const char of subId) {
-          if (char.toLowerCase() !== char) {
-            tempId += ' ';
+  }
+
+  ddChange(event: IAvailable, i: 0 | 1) {
+    if (!event.looked) {
+      event.content.forEach((item: IReaction) => {
+        item.isSimple = true;
+        if (item.reactants) {
+          for (const react in item.reactants) {
+            item.reactants[react].isSimple = true;
+            item.reactants[react].hasRecipe = false;
+            if (this.storage.simpleList.includes(react)) {
+              item.reactants[react].hasRecipe = true;
+            } else {
+              const newItem: IReaction | undefined = this.lookForRecipe(react);
+              if (newItem) {
+                item.isSimple = false;
+                item.reactants[react].isSimple = false;
+                item.reactants[react].hasRecipe = true;
+              }
+            }
           }
-          tempId += char;
         }
-        item.name = item.id[0] + tempId;
-      } else {
-        item.name = item.id;
-      }
-    })
-    this.filteredMeds = COPY(this.meds);
-    this.chems.forEach((item: IReaction) => {
-      item.isSimple = true;
-      for (const react of Object.keys(item.reactants)) {
-        if (!this.basicReagents.includes(react)) {
-          item.isSimple = false;
-          break;
-        }
-      }
-      const subId: string = item.id.substring(1);
-      if (subId !== subId.toLowerCase()) {
-        let tempId: string = '';
-        for (const char of subId) {
-          if (char.toLowerCase() !== char) {
-            tempId += ' ';
-          }
-          tempId += char;
-        }
-        item.name = item.id[0] + tempId;
-      } else {
-        item.name = item.id;
-      }
-    })
-    this.filteredChems = COPY(this.chems);
-  }
-
-  copyParsed() {
-    this.copied = false;
-    parser(this.importedFileContent);
-    this.copied = true;
-  }
-
-  clear() {
-    this.importedFileName = '';
-    this.importedFileContent = '';
-    this.fileLoaded = false;
-    this.copied = false;
-  }
-
-  onSelected(event: any) {
-    const file: File = event.target.files[0];
-    let fileReader: FileReader = new FileReader();
-    fileReader.onloadstart = () => {
-      this.fileLoaded = false;
-    };
-    fileReader.onloadend = (data: any) => {
-      this.importedFileContent = data.target.result;
-      this.fileLoaded = true;
+      })
+      event.looked = true;
     }
-    fileReader.readAsText(file);
+    this.selectedReactionCategory[i] = event;
+    this.filter(i);
+  }
+
+  filter(i: 0 | 1) {
+    const filter: string = this.selectedReactionCategory[i].filter.toLowerCase();
+    if (!filter) {
+      this.filteredCategory[i].content = COPY(this.selectedReactionCategory[i].content);
+    } else {
+      this.filteredCategory[i].content = COPY(this.selectedReactionCategory[i].content.filter((reaction: IReaction) => {
+        return reaction.id.toLowerCase().includes(filter) ||
+        (reaction.reactants &&
+          Object.keys(reaction.reactants).map((el: string) => el.toLowerCase()).find((el: string) => el.includes(filter)));
+      }))
+    }
   }
 
   selectRecipe(item: IReaction) {
     this.selectedReaction = item;
     this.selectedTree = [];
-    this.selectedTree.push(item);
-    this.recTree(item);
+    this.buildTree(item);
   }
 
-  private recTree(item: IReaction) {
-    for (const react of Object.keys(item.reactants)) {
-      if (!this.basicReagents.includes(react.toLowerCase())) {
-        item.reactants[react].isSimple = false;
-        item.reactants[react].isRecipe = false;
-        let newItem: IReaction | undefined =
-          this.meds.find((item: IReaction) => item.id.toLowerCase() === react.toLowerCase());
-        if (!newItem) {
-          newItem = this.chems.find((item: IReaction) => item.id.toLowerCase() === react.toLowerCase());
+  buildTree(item: IReaction) {
+    item.isSimple = true;
+    let itemAdded: boolean = false;
+    if (item.reactants) {
+      for (const react in item.reactants) {
+        if (this.storage.simpleList.includes(react)) {
+          item.reactants[react].hasRecipe = true;
+        } else {
+          const newItem: IReaction | undefined = this.lookForRecipe(react);
+          if (newItem) {
+            item.isSimple = false;
+            if (!itemAdded) {
+              this.selectedTree.push(item);
+              itemAdded = true;
+            }
+            this.buildTree(newItem);
+          }
         }
-        if (newItem) {
-          item.reactants[react].isRecipe = true;
-          this.selectedTree.push(newItem);
-          this.recTree(newItem);
-        }
-      } else {
-        item.reactants[react].isSimple = true;
       }
+    }
+    if (!this.selectedTree.find((el: IReaction) => el.id === item.id)) {
+      this.selectedTree.push(item);
     }
   }
 
-  filterMeds() {
-    if (!this.filteredMedsInput?.length) {
-      this.filteredMeds = COPY(this.meds);
-      return;
-    }
-    this.filteredMeds = [];
-    this.meds.forEach((value: IReaction) => {
-      if (value.id.toLowerCase().includes(this.filteredMedsInput.toLowerCase())) {
-        this.filteredMeds.push(value);
+  lookForRecipe(id: string) {
+    for (const category of this.storage.wizardsData.reactions) {
+      const found: IReaction | undefined = category.content.find((reaction: IReaction) => reaction.id === id);
+      if (found) {
+        return found;
       }
-    });
+    }
+    return undefined;
   }
 
-  filterChems() {
-    if (!this.filteredChemsInput?.length) {
-      this.filteredChems = COPY(this.chems);
-      return;
-    }
-    this.filteredChems = [];
-    this.chems.forEach((value: IReaction) => {
-      if (value.id.toLowerCase().includes(this.filteredChemsInput.toLowerCase())) {
-        this.filteredChems.push(value);
-      }
-    });
+  showMeItem(item: IReaction) {
+    this.showMe = item;
+    console.log('ShowMeItem response:');
+    console.log(item);
   }
 
   protected readonly Object = Object;
+  protected readonly JSON = JSON;
 }
