@@ -5,7 +5,7 @@
     "name": "Krip4yk",
     "email": "krip4yk.main@gmail.com"
   },
-  "version": "1.2.0",
+  "version": "1.2.0b",
   "main": "main.js",
   "private": true,
   "dependencies": {
