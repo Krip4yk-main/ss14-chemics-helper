@@ -56,14 +56,26 @@ export class HomeComponent implements OnInit {
   filter(i: 0 | 1) {
     const filter: string = this.selectedReactionCategory[i].filter.toLowerCase();
     if (!filter) {
-      this.filteredCategory[i].content = COPY(this.selectedReactionCategory[i].content);
+      this.filteredCategory[i].content = this.sortABC(COPY(this.selectedReactionCategory[i].content));
     } else {
-      this.filteredCategory[i].content = COPY(this.selectedReactionCategory[i].content.filter((reaction: IReaction) => {
+      this.filteredCategory[i].content = this.sortABC(COPY(this.selectedReactionCategory[i].content.filter((reaction: IReaction) => {
         return reaction.id.toLowerCase().includes(filter) ||
         (reaction.reactants &&
           Object.keys(reaction.reactants).map((el: string) => el.toLowerCase()).find((el: string) => el.includes(filter)));
-      }))
+      })));
     }
+  }
+
+  sortABC(data: IReaction[]) {
+    return data.sort((a: IReaction, b: IReaction) => {
+      if ( a.id < b.id ){
+        return -1;
+      }
+      if ( a.id > b.id ){
+        return 1;
+      }
+      return 0;
+    })
   }
 
   selectRecipe(item: IReaction) {
