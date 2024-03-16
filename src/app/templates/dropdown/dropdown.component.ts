@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {CoreEmpty} from "../../core/core.empty";
 
 @Component({
@@ -13,8 +13,17 @@ export class DropdownComponent<T> implements OnInit {
 
   @Output('onChange') onChange: EventEmitter<T> = new EventEmitter();
 
-  isExpanded: boolean = false;
+  @ViewChild('dropdown') dropdown: ElementRef | undefined;
 
+  @HostListener('document:mousedown', ['$event'])
+  onGlobalClick(event: any): void {
+    if (!this.dropdown?.nativeElement.contains(event.target)) {
+      // clicked outside => close dropdown list
+      this.isExpanded = false;
+    }
+  }
+
+  isExpanded: boolean = false;
   selectedItem: T | undefined = undefined;
 
   constructor(

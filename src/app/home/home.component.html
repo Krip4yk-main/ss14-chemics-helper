@@ -12,8 +12,10 @@
               ></app-dropdown>
             </div>
           </div>
+          <input type="text" [(ngModel)]="selectedReactionCategory[0].filter" (keyup)="filter(0)"
+                 [disabled]="!selectedReactionCategory[0].content.length"
+          >
           <div class="items">
-            <input type="text" [(ngModel)]="selectedReactionCategory[0].filter" (keyup)="filter(0)">
             <div class="item" *ngFor="let item of filteredCategory[0].content" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
@@ -40,8 +42,10 @@
               ></app-dropdown>
             </div>
           </div>
+          <input type="text" [(ngModel)]="selectedReactionCategory[1].filter" (keyup)="filter(1)"
+                 [disabled]="!selectedReactionCategory[1].content.length"
+          >
           <div class="items">
-            <input type="text" [(ngModel)]="selectedReactionCategory[1].filter" (keyup)="filter(1)">
             <div class="item" *ngFor="let item of filteredCategory[1].content" (click)="selectRecipe(item)"
                  [ngClass]="{
                     'simple': item.isSimple,
